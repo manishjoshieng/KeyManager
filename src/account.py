@@ -51,8 +51,9 @@ class Account:
     def getAllPasswords(self)-> dict:
             all_keys = {}
             all_codes = self.josnHandler.get_value("passcodes")
-            for code in all_codes.keys():
-                all_keys[code] = self.getPassword(code)
+            if all_codes is not None:
+                for code in all_codes.keys():
+                    all_keys[code] = self.getPassword(code)
             return all_keys
         
     def getPassword(self,website):

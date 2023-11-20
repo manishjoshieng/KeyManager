@@ -137,11 +137,7 @@ class PasswordManager:
         )
         self.signup_btn.grid(row=1, column=1, padx=10, pady=10, sticky='w')  # Centered to the left
 
-        footer = Label(self.button_frame,
-                                text="Crafted With Love",
-                                bg = THEME_COLOR,
-                                font=(FONT,FONT_SIZE))
-        footer.grid(row=2,column=0,columnspan=2, sticky="nesw",padx=20,pady=10)
+        
       
 
     def save_master_password(self):
@@ -267,6 +263,9 @@ class PasswordManager:
     
     def findPassword(self,website_entry:Entry):
         website = website_entry.get()
+        if len(website) ==0:
+            messagebox.showinfo(title="Error", message=f"Website field can not be empty!")
+            return
         password = self.user_account.getPassword(website)
         if password != None:
             email = password[0]
@@ -309,10 +308,12 @@ class PasswordManager:
             main_frame.grid_remove()
         self.window.geometry(WINDOW_SIZE_L)
         password_dict = self.user_account.getAllPasswords()
+        if len(password_dict)==0:
+            messagebox.showinfo(title="Info", message="No Credential found")
+        
         sorted_dict = dict(sorted(password_dict.items()))
         self.window.rowconfigure(0, weight=1)
         self.window.columnconfigure(0, weight=1)
-
         canvas = Canvas(self.window, bg=THEME_COLOR, highlightthickness=0)
         canvas.grid(row=0, column=0, columnspan=4, padx=40, pady=50, sticky="nsew")
 
@@ -338,30 +339,30 @@ class PasswordManager:
                      bg=BTN_COLOR,
                      )
         btn.grid(row=0,column=1, pady=10,sticky=LEFT)
+        if password_dict:
+            for i, (website, details) in enumerate(sorted_dict.items(), start=1):
+                platform_label = Label(second_frame, text=website, bg=THEME_COLOR, anchor="w")
+                platform_label.grid(row=i, column=0, padx=40, pady=10, sticky="w")
 
-        for i, (website, details) in enumerate(sorted_dict.items(), start=1):
-            platform_label = Label(second_frame, text=website, bg=THEME_COLOR, anchor="w")
-            platform_label.grid(row=i, column=0, padx=40, pady=10, sticky="w")
-
-            show_btn = Button(second_frame, text="show", 
-                              command=partial(self.show_key, website, details[0],details[1]), 
-                              bg=BTN_COLOR,
-                              width=VAULT_BTN_WIDTH)
-            show_btn.grid(row=i, column=1, pady=10,  sticky="w")
-            copy_btn = Button(second_frame,
-                               text="Copy Password", 
-                               command=partial(self.copy_text, details[1]), 
-                               width=VAULT_BTN_WIDTH,
-                               bg=BTN_COLOR)
-            copy_btn.grid(row=i, column=2, pady=10,padx=5,  sticky="w")
-
-            remove_btn = Button(second_frame, text="Delete Password", 
-                                command=partial(self.remove_password, website,canvas,v_scrollbar,h_scrollbar),
+                show_btn = Button(second_frame, text="show", 
+                                command=partial(self.show_key, website, details[0],details[1]), 
                                 bg=BTN_COLOR,
                                 width=VAULT_BTN_WIDTH)
-            remove_btn.grid(row=i, column=3, pady=10,padx=5, sticky="w")
-        canvas.update_idletasks()
-        canvas.config(scrollregion=canvas.bbox("all"))
+                show_btn.grid(row=i, column=1, pady=10,  sticky="w")
+                copy_btn = Button(second_frame,
+                                text="Copy Password", 
+                                command=partial(self.copy_text, details[1]), 
+                                width=VAULT_BTN_WIDTH,
+                                bg=BTN_COLOR)
+                copy_btn.grid(row=i, column=2, pady=10,padx=5,  sticky="w")
+
+                remove_btn = Button(second_frame, text="Delete Password", 
+                                    command=partial(self.remove_password, website,canvas,v_scrollbar,h_scrollbar),
+                                    bg=BTN_COLOR,
+                                    width=VAULT_BTN_WIDTH)
+                remove_btn.grid(row=i, column=3, pady=10,padx=5, sticky="w")
+            canvas.update_idletasks()
+            canvas.config(scrollregion=canvas.bbox("all"))
         
     def backToLogin(self,second_frame:Canvas,v_s:Scrollbar,h_s:Scrollbar):
         second_frame.grid_remove()
