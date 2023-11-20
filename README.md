@@ -71,5 +71,3 @@ Feel free to explore the features and customize the settings to suit your needs!
 This project is licensed under the [MIT License](LICENSE).
 
 ---
-
-Make sure to replace placeholders like `your-username` with your actual GitHub username and update the content as needed. Additionally, include the license file (e.g., `LICENSE`) in your project repository.
